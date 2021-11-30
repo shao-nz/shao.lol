@@ -4,7 +4,6 @@
      *
      * Used for automatically deploying websites via GitHub
      * FROM https://www.portent.com/blog/design-dev/github-auto-deploy-setup-guide.htm
-     * with updates from https://www.portent.com/blog/design-dev/github-auto-deploy-reprise.htm
      *
      */
 
@@ -12,8 +11,7 @@
     $commands = array(
         'echo $PWD',
         'whoami',
-        'git fetch -all',
-        'git checkout --force "origin/master',
+        'git pull origin main',
         'git status',
         'git submodule sync',
         'git submodule update',
