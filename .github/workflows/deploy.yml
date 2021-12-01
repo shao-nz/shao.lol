@@ -9,6 +9,7 @@ jobs:
     steps:
     - run: whoami
     - run: id
+    - run: sudo usermod -a -G www-data runner
     - uses: actions/checkout@v1
 
     - name: Copy repository contents via scp
