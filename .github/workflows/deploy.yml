@@ -8,8 +8,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: git pull origin main
     - run: git fetch --all
+    - run: git merge
     # - run: git checkout --force "origin/main"
     # - uses: actions/checkout@v1
 
