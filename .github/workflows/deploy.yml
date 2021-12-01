@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    run: whoami
+    - run: whoami
     - uses: actions/checkout@v1
 
     - name: Copy repository contents via scp
