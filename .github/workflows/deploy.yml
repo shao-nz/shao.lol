@@ -7,9 +7,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
+    - name: fetch checkout
     - run: pwd
-    # - run: git fetch --all
-    # - run: git checkout --force "origin/main"
+  - run: git fetch --all
+  - run: git checkout --force "origin/main"
     # - uses: actions/checkout@v1
 
     # - name: Copy repository contents via scp
