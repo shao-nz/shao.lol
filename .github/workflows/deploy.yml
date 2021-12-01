@@ -8,6 +8,7 @@ jobs:
 
     steps:
     - run: whoami
+    - run: id
     - uses: actions/checkout@v1
 
     - name: Copy repository contents via scp
