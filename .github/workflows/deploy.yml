@@ -7,29 +7,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - run: git fetch --all
-    - run: git merge
-    - run: sudo touch uwsgi.ini
+    # - uses: actions/checkout@v2
+    # - run: git fetch --all
+    # - run: git merge
     # - run: git checkout --force "origin/main"
-    # - uses: actions/checkout@v1
+    - uses: actions/checkout@v1
 
-    # - name: Copy repository contents via scp
-    #   uses: appleboy/scp-action@master
-    #   env:
-    #     HOST: ${{ secrets.HOST }}
-    #     USERNAME: ${{ secrets.USERNAME }}
-    #     PORT: ${{ secrets.PORT }}
-    #     KEY: ${{ secrets.SSHKEY }}
-    #   with:
-    #     source: "."
-    #     target: "/var/www/shao.lol"
+    - name: Copy repository contents via scp
+      uses: appleboy/scp-action@master
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+      with:
+        source: "."
+        target: "/var/www/shao.lol"
 
-    # - name: Executing remote command
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     host: ${{ secrets.HOST }}
-    #     USERNAME: ${{ secrets.USERNAME }}
-    #     PORT: ${{ secrets.PORT }}
-    #     KEY: ${{ secrets.SSHKEY }}
-    #     script: ls
+    - name: Executing remote command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+        script: ls
+
+    - run: sudo touch uwsgi.ini
