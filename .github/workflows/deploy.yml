@@ -3,10 +3,11 @@ name: Deploy
 on: [push]
 jobs:
   build:
+
     runs-on: ubuntu-latest
+    
     steps:
-    - name: checkout
-    uses: actions/checkout@v2
+    - uses: actions/checkout@v2
     - run: pwd
     - run: git fetch --all
     - run: git checkout --force "origin/main"
