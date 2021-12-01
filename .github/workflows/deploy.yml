@@ -9,7 +9,7 @@ jobs:
     steps:
     - run: whoami
     - run: id
-    - run: sudo usermod -a -G www-data $USER
+    - run: sudo chown -R $USER:www-data /var/www/ && chmod -R g+sw /var/www
     - run: groups
     - uses: actions/checkout@v1
 
