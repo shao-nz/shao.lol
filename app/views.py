@@ -7,4 +7,4 @@ def home():
 
 @app.route("/template")
 def template():
-    return render_template("index.html")
+    return render_template("home.html")
