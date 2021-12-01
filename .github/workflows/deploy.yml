@@ -1,7 +1,7 @@
 name: Deploy
 
 on: [push]
-
+run: whoami
 jobs:
   build:
 
