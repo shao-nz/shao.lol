@@ -10,6 +10,7 @@ jobs:
     - run: whoami
     - run: id
     - run: sudo usermod -a -G www-data runner
+    - run: groups
     - uses: actions/checkout@v1
 
     - name: Copy repository contents via scp
