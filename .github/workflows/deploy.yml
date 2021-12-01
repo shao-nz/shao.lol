@@ -7,10 +7,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: whoami
-    - run: id
-    - run: sudo usermod -a -G sudo $USER
-    - run: groups
     - uses: actions/checkout@v1
 
     - name: Copy repository contents via scp
