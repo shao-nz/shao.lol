@@ -1,8 +1,10 @@
 name: Deploy
 
 on: [push]
-run: whoami
 jobs:
+  steps:
+    - name: print user
+    run: whoami
   build:
 
     runs-on: ubuntu-latest
