@@ -2,14 +2,12 @@ name: Deploy
 
 on: [push]
 jobs:
-  steps:
-    - name: print user
-    run: whoami
   build:
 
     runs-on: ubuntu-latest
 
     steps:
+    run: whoami
     - uses: actions/checkout@v1
 
     - name: Copy repository contents via scp
