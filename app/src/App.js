@@ -15,7 +15,6 @@ class App extends React.Component {
     return (
       <div className='App'>
           <h1>shao.lol tracker</h1>
-          <img src={logo} />
           <Tracker />
       </div>
     );
