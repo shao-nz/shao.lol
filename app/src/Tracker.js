@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import "./styles/Tracker.css";
 
-const RGAPI_KEY = 'RGAPI-c88a44f8-62ac-4575-aa27-6b8b80662764'
+const RGAPI_KEY = ''
 
 export class Tracker extends React.Component {
   constructor(props) {
@@ -42,7 +42,7 @@ export class Tracker extends React.Component {
       ?
         <p>
           Summoner level: {this.state.playerData.summonerLevel} <br />
-          <img src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + this.state.playerData.profileIconId + '.png'}></img>
+          <img width="100px" height="100px" src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + this.state.playerData.profileIconId + '.png'}></img>
         </p>
       :
         <br />
