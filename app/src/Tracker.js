@@ -32,6 +32,29 @@ const LobbyType = ({queueType, tier, rank, leaguePoints, wins, losses}) => (
   </div>
 );
 
+const SummonerProfile = ({summonerName, profileIconId, summonerLevel, summonerData}) => {
+  return (
+    <div className='summonerProfile'>
+      <p>
+        Tracking <b>{summonerName} </b> <br />
+        <img width="100px" height="100px" src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + profileIconId + '.png'}></img> <br />
+        {summonerLevel} <br />
+        {summonerData.map((queue) => (
+            <LobbyType
+              queueType={QUEUE_TYPES[queue.queueType]}
+              tier={TIERS[queue.tier]}
+              rank={queue.rank}
+              leaguePoints={queue.leaguePoints}
+              wins={queue.wins}
+              losses={queue.losses}
+              key={queue.leagueId}
+            />
+          ))}
+      </p>
+    </div>
+  );
+}
+
 export class Tracker extends React.Component {
   constructor(props) {
     super(props);
@@ -60,37 +83,27 @@ export class Tracker extends React.Component {
   }
 
   render() {
-      return (
-    <div className='main'>
-      <input type='text' onChange={e => this.setState({searchText: e.target.value})}></input>
-      <button onClick={e => this.getDataFromSummonerName(e)}>Press me</button> <br />
-      {this.state.summonerByNameData != ''
-      ?
-        <div>
-          Tracking <b>{this.state.summonerByNameData.name} </b> <br />
-          Summoner level: {this.state.summonerByNameData.summonerLevel} <br />
-          <img width="100px" height="100px" src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + this.state.summonerByNameData.profileIconId + '.png'}></img> <br />
-
-          {this.state.leagueEntriesBySummonerData.map((queue) => (
-              <LobbyType
-                queueType={QUEUE_TYPES[queue.queueType]}
-                tier={TIERS[queue.tier]}
-                rank={queue.rank}
-                leaguePoints={queue.leaguePoints}
-                wins={queue.wins}
-                losses={queue.losses}
-                key={queue.leagueId}
-              />
-            ))}
+    return (
+      <div>
+        <div className='searchBar'>
+          <input type='text' onChange={e => this.setState({searchText: e.target.value})}></input>
+          <button onClick={e => this.getDataFromSummonerName(e)} /> <br />
         </div>
-      :
-        <p>
-          Player not found!
-        </p>
-        
-      }
-    </div>
-    
+        {this.state.summonerByNameData != ''
+        ?
+        <SummonerProfile 
+          summonerName={this.state.summonerByNameData.name}
+          profileIconId={this.state.summonerByNameData.profileIconId}
+          summonerLevel={this.state.summonerByNameData.summonerLevel} 
+          summonerData={this.state.leagueEntriesBySummonerData}
+        />
+        :
+          <p>
+            Player not found!
+          </p>
+          
+        }
+      </div>
   );
   }
 }
