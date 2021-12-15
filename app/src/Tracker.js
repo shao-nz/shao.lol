@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { Component, useState } from 'react';
 import "./styles/Tracker.css";
 
