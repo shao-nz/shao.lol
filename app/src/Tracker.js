@@ -3,8 +3,6 @@
 import React, { Component, useState } from 'react';
 import "./styles/Tracker.css";
 
-const RGAPI_KEY = 'RGAPI-4c10bc02-c175-4056-b1a6-f10f8337607f'
-
 const QUEUE_TYPES = {
   "RANKED_FLEX_SR": "Ranked Flex",
   "RANKED_SOLO_5x5": "Ranked Solo"
@@ -61,24 +59,35 @@ export class Tracker extends React.Component {
     
     this.state = {
       searchText: '',
+      summonerFound: false,
       summonerByNameData: [],
       leagueEntriesBySummonerData: []
     }
   }
 
   async getDataFromSummonerName(e) {
-    var request = 'https://oc1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + this.state.searchText + '?api_key=' + RGAPI_KEY;
+    var request = 'https://shao.lol/api/riot/summoner/' + this.state.searchText
     let response = await fetch(request);
+    if (!response.ok) {
+      const message = "Error: {response.status}";
+      throw new Error(message);
+    }
     let data = await response.json();
     this.setState({
-      summonerByNameData: data
+      summonerByNameData: data,
+      summonerFound: true
     })
 
-    request = 'https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/' + this.state.summonerByNameData.id + '?api_key=' + RGAPI_KEY;
+    request = 'https://shao.lol/api/riot/lol-by-summoner/' + this.state.summonerByNameData.id
     response = await fetch(request);
+    if (!response.ok) {
+      const message = "Error: {response.status}";
+      throw new Error(message);
+    }
     data = await response.json();
     this.setState({
-      leagueEntriesBySummonerData: data
+      leagueEntriesBySummonerData: data,
+      summonerFound: true
     });
   }
 
@@ -89,7 +98,7 @@ export class Tracker extends React.Component {
           <input type='text' onChange={e => this.setState({searchText: e.target.value})}></input>
           <button onClick={e => this.getDataFromSummonerName(e)} /> <br />
         </div>
-        {this.state.summonerByNameData != ''
+        {this.state.summonerFound == true
         ?
         <SummonerProfile 
           summonerName={this.state.summonerByNameData.name}
@@ -99,7 +108,6 @@ export class Tracker extends React.Component {
         />
         :
           <p>
-            Player not found!
           </p>
           
         }
