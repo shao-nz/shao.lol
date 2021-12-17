@@ -91,12 +91,19 @@ export class Tracker extends React.Component {
     });
   }
 
+  onFormSubmit = (e) => {
+    e.preventDefault();
+    this.getDataFromSummonerName(e);
+  }
+
   render() {
     return (
       <div>
         <div className='searchBar'>
-          <input type='text' onChange={e => this.setState({searchText: e.target.value})}></input>
-          <button onClick={e => this.getDataFromSummonerName(e)} /> <br />
+            <form onSubmit={this.onFormSubmit}>
+                <input type='text' onChange={e => this.setState({searchText: e.target.value})}></input>
+                <button type='submit' /> <br />
+            </form>
         </div>
         {this.state.summonerFound == true
         ?
