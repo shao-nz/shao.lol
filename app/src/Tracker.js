@@ -1,9 +1,7 @@
 /* eslint-disable */
 
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import "./styles/Tracker.css";
-
-const RGAPI_KEY = 'RGAPI-4c10bc02-c175-4056-b1a6-f10f8337607f'
 
 const QUEUE_TYPES = {
   "RANKED_FLEX_SR": "Ranked Flex",
@@ -32,77 +30,114 @@ const LobbyType = ({queueType, tier, rank, leaguePoints, wins, losses}) => (
   </div>
 );
 
-const SummonerProfile = ({summonerName, profileIconId, summonerLevel, summonerData}) => {
-  return (
-    <div className='summonerProfile'>
-      <p>
-        Tracking <b>{summonerName} </b> <br />
-        <img width="100px" height="100px" src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + profileIconId + '.png'}></img> <br />
-        {summonerLevel} <br />
-        {summonerData.map((queue) => (
-            <LobbyType
-              queueType={QUEUE_TYPES[queue.queueType]}
-              tier={TIERS[queue.tier]}
-              rank={queue.rank}
-              leaguePoints={queue.leaguePoints}
-              wins={queue.wins}
-              losses={queue.losses}
-              key={queue.leagueId}
-            />
-          ))}
-      </p>
-    </div>
-  );
-}
+  export class SummonerProfile extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        summonerByNameData: {},
+        leagueEntriesBySummonerData: []
+      };
+    }
+
+    async componentDidMount() {
+      const summonerName = this.props.summonerName.toLowerCase();
+      await this.getSummonerByName(summonerName);
+      await this.getLeagueEntriesBySummoner(this.state.summonerByNameData.id)
+    }
+
+    async getSummonerByName(summonerName) {
+      var request = 'https://shao.lol/api/riot/summoner/' + summonerName
+      let response = await fetch(request);
+      let data = await response.json();
+      // var currentSummoner = {};
+      // currentSummoner[data.name.toLowerCase()] = data;
+      this.setState({
+        summonerByNameData: data,
+      })
+    }
+
+    async getLeagueEntriesBySummoner(summonerId) {
+      var request = 'https://shao.lol/api/riot/lol-by-summoner/' + summonerId
+      let response = await fetch(request);
+      let data = await response.json();
+      // var currentLeagueEntries = {};
+      // currentLeagueEntries[data.Summonername.toLowerCase()] = data;
+      this.setState({
+        leagueEntriesBySummonerData: data,
+      });
+      // console.log(this.state.leagueEntriesBySummonerData)
+    }
+
+    render() {
+      return (
+        <div className='summonerProfile'>
+          <p>
+            Tracking <b>{this.state.summonerByNameData.name} </b> <br />
+            <img width="100px" height="100px" src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + this.state.summonerByNameData.profileIconId + '.png'}></img> <br />
+            {this.state.summonerByNameData.summonerLevel} <br />
+          </p>
+            {this.state.leagueEntriesBySummonerData.map((data) => (
+                <LobbyType
+                  queueType={QUEUE_TYPES[data.queueType]}
+                  tier={TIERS[data.tier]}
+                  rank={data.rank}
+                  leaguePoints={data.leaguePoints}
+                  wins={data.wins}
+                  losses={data.losses}
+                  key={data.leagueId}
+                />
+              ))}
+        </div>
+      );
+    }
+  }
 
 export class Tracker extends React.Component {
   constructor(props) {
     super(props);
-    
     this.state = {
       searchText: '',
-      summonerByNameData: [],
+      summonerFound: false,
+      summonerByNameData: {},
       leagueEntriesBySummonerData: []
-    }
+    };
+    this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
-  async getDataFromSummonerName(e) {
-    var request = 'https://oc1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + this.state.searchText + '?api_key=' + RGAPI_KEY;
-    let response = await fetch(request);
-    let data = await response.json();
-    this.setState({
-      summonerByNameData: data
-    })
-
-    request = 'https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/' + this.state.summonerByNameData.id + '?api_key=' + RGAPI_KEY;
-    response = await fetch(request);
-    data = await response.json();
-    this.setState({
-      leagueEntriesBySummonerData: data
-    });
+  async onFormSubmit(e) {
+    e.preventDefault();
+    await this.getSummonerByName(this.state.searchText);
+    console.log(this.state.summonerByNameData)
+    await this.getLeagueEntriesBySummoner(this.state.summonerByNameData[this.state.searchText].id);
   }
 
   render() {
     return (
       <div>
         <div className='searchBar'>
-          <input type='text' onChange={e => this.setState({searchText: e.target.value})}></input>
-          <button onClick={e => this.getDataFromSummonerName(e)} /> <br />
+            <button/>
+            {/* <form onSubmit={this.onFormSubmit}>
+                <input type='text' onChange={e => this.setState({searchText: e.target.value.toLowerCase().replace(/ /g, '')})}></input>
+                <button type='submit' /> <br />
+            </form> */}
         </div>
-        {this.state.summonerByNameData != ''
+        <SummonerProfile
+          summonerName="Shao"
+        />
+        <SummonerProfile
+          summonerName="Harbinsink"
+        />
+        {/* {this.state.summonerFound == true
         ?
-        <SummonerProfile 
-          summonerName={this.state.summonerByNameData.name}
-          profileIconId={this.state.summonerByNameData.profileIconId}
-          summonerLevel={this.state.summonerByNameData.summonerLevel} 
-          summonerData={this.state.leagueEntriesBySummonerData}
+        <SummonerProfile
+          summonerByNameData={this.state.summonerByNameData}
+          leagueEntriesBySummonerData={this.state.leagueEntriesBySummonerData}
         />
         :
           <p>
-            Player not found!
           </p>
           
-        }
+        } */}
       </div>
   );
   }
