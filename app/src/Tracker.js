@@ -40,7 +40,7 @@ const LobbyType = ({queueType, tier, rank, leaguePoints, wins, losses}) => (
     }
 
     async componentDidMount() {
-      const summonerName = this.props.summonerName.toLowerCase();
+      const summonerName = this.props.summonerName.toLowerCase().replace(/ /g, '');
       await this.getSummonerByName(summonerName);
       await this.getLeagueEntriesBySummoner(this.state.summonerByNameData.id)
     }
@@ -57,7 +57,7 @@ const LobbyType = ({queueType, tier, rank, leaguePoints, wins, losses}) => (
     }
 
     async getLeagueEntriesBySummoner(summonerId) {
-      var request = 'https://shao.lol/api/riot/lol-by-summoner/' + summonerId
+      var request = 'https://shao.lol/api/riot/lolBySummoner/' + summonerId
       let response = await fetch(request);
       let data = await response.json();
       // var currentLeagueEntries = {};
@@ -70,7 +70,7 @@ const LobbyType = ({queueType, tier, rank, leaguePoints, wins, losses}) => (
 
     render() {
       return (
-        <div className='summonerProfile'>
+        <div className='summonerProfile cursor-pointer'>
           <p>
             Tracking <b>{this.state.summonerByNameData.name} </b> <br />
             <img width="100px" height="100px" src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + this.state.summonerByNameData.profileIconId + '.png'}></img> <br />
@@ -126,6 +126,12 @@ export class Tracker extends React.Component {
         />
         <SummonerProfile
           summonerName="Harbinsink"
+        />
+        <SummonerProfile
+          summonerName="Barny Fargo"
+        />
+        <SummonerProfile
+          summonerName="Jozendas"
         />
         {/* {this.state.summonerFound == true
         ?
