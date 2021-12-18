@@ -2,7 +2,11 @@ div {
     font-size: 18px;
 }
 
-.summonerProfile{
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.summonerProfile {
     margin: 30px auto;
     position: relative;
     left: -30%;
