@@ -1,0 +1,15 @@
+.individualGame {
+    padding: 5px 0;
+    margin: 20px auto;
+    background-color: rgb(156, 156, 156);
+    background-image: linear-gradient( rgba(29, 0, 56, 0.65), rgba(18, 18, 18));
+    border: 1px;
+    border-color: rgba(29, 0, 56, 0.65);
+    border-style: solid;
+    border-radius: 10px;
+}
+
+.summonerNames ul {
+    font-size: 10px;
+    list-style-type: none;
+}
