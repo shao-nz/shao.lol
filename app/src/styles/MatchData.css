@@ -16,6 +16,25 @@
     /* grid-template-rows: 0.5fr; */
 }
 
+.champLevel {
+    grid-area: 1/1;
+    /* align-self: end; */
+}
+
+.gameDuration {
+    grid-area: 1/1;
+    align-self: end;
+}
+
+.KDA {
+    grid-area: 1/2;
+    align-self: center;
+}
+
+.CSStats {
+    grid-area: 1/2;
+}
+
 .summonerNames {
     /* padding: 0 10px 10px 10px; */
     grid-area: 1/4;
@@ -33,7 +52,6 @@
 }
 
 .summonerNames img {
-    border: 1px solid black;
     width: 20px;
     height: 20px;
 }
@@ -53,9 +71,4 @@
     display: flex;
     flex-direction: row;
     /* background-color: red; */
-}
-
-.KDA {
-    grid-area: 1/2;
-    align-self: end;
 }
