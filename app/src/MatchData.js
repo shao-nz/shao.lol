@@ -9,7 +9,7 @@ const TEAMS = {
     100: 'blue',
     200: 'red'
   }
-  
+
 export class MatchData extends React.Component {
   constructor(props) {
     super(props);
@@ -95,7 +95,8 @@ const DisplayMatchData = ({matchData, puuid}) => {
     {/* {matchData.info.gameCreation} <br />
     {matchData.info.gameStartTimestamp} <br />
     {matchData.info.gameId} */}
-    <DisplayChampLevel
+    <DisplayChamp
+      championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
       champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
     />
     <DisplayGameDuration
@@ -137,6 +138,28 @@ class DisplayGameDuration extends React.Component {
   }
 }
 
+const DisplayChamp = ({championId, champLevel}) => (
+  <div className='champ'>
+    <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + championId + '.png'}/> <br />
+    Level {champLevel}
+  </div>
+)
+
+const DisplayCSStats = ({cs, gameDuration}) => (
+  <div className='CSStats'>
+    {cs} CS <br />
+    <b>({(cs/(gameDuration/60)).toFixed(1)})</b> CS/m
+  </div>
+)
+
+
+const DisplayKDA = ({kills, deaths, assists}) => (
+  <div className='KDA'>
+    {kills}/{deaths}/{assists} <br />
+    {((kills + assists)/deaths).toFixed(2)} KDA
+  </div>
+)
+
 class DisplaySummonerNames extends React.Component {
   getSummonerNamesByTeam = (summonerList) => {
     var summonersByTeamDict = {};
@@ -166,27 +189,6 @@ class DisplaySummonerNames extends React.Component {
     )
   }
 }
-
-const DisplayChampLevel = ({champLevel}) => (
-  <div className='champLevel'>
-    Level {champLevel}
-  </div>
-)
-
-const DisplayCSStats = ({cs, gameDuration}) => (
-  <div className='CSStats'>
-    {cs} CS <br />
-    <b>({(cs/(gameDuration/60)).toFixed(1)})</b> CS/m
-  </div>
-)
-
-
-const DisplayKDA = ({kills, deaths, assists}) => (
-  <div className='KDA'>
-    {kills}/{deaths}/{assists} <br />
-    {((kills + assists)/deaths).toFixed(2)} KDA
-  </div>
-)
 
 const DisplayBlueTeam = (blueTeamList) => (
   <div className='blueTeamList'>

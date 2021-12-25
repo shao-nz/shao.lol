@@ -12,13 +12,18 @@
     border-style: solid;
     border-radius: 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1.75fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1.75fr;
     /* grid-template-rows: 0.5fr; */
 }
 
-.champLevel {
+.champ {
     grid-area: 1/1;
     /* align-self: end; */
+}
+
+.champ img {
+    width: 75px;
+    height: 75px;
 }
 
 .gameDuration {
@@ -37,7 +42,7 @@
 
 .summonerNames {
     /* padding: 0 10px 10px 10px; */
-    grid-area: 1/4;
+    grid-area: 1/5;
     gap: -10px;
     display: grid;
     grid-template-columns: 1fr 1fr;
