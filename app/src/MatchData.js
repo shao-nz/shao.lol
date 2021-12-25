@@ -77,9 +77,14 @@ export class MatchData extends React.Component {
 }
 
 const DisplayMatchData = ({matchData, puuid}) => {
-  var win = matchData.info.participants.find(participants => participants.puuid == puuid).win;
   var background = '';
+  
+  var win = matchData.info.participants.find(participants => participants.puuid == puuid).win;
+  var teamEarlySurrendered = matchData.info.participants.find(participants => participants.puuid == puuid).teamEarlySurrendered;
   win ? background = 'green' : background = 'red'
+  if (teamEarlySurrendered) {
+    background = 'grey';
+  }
   return (
     <div className='individualGame' style={{ backgroundColor: background}}>
     <DisplayKDA
