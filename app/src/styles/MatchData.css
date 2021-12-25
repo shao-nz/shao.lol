@@ -45,6 +45,7 @@
 
 .summonerNames ul {
     list-style-type: none;
+    padding: 0;
 }
 
 .summonerNames li {
@@ -58,6 +59,7 @@
 
 .summoner {
     margin: 5px 0;
+    text-overflow: ellipsis;
     text-align: left;
 }
 
