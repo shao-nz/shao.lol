@@ -8,27 +8,27 @@ const QUEUE_TYPES = {
     "RANKED_SOLO_5x5": "Ranked Solo"
   }
   
-  const TIERS = {
-    "IRON": "Iron",
-    "BRONZE": "Bronze",
-    "SILVER": "Silver",
-    "GOLD": "Gold",
-    "PLATINUM": "Platinum",
-    "DIAMOND": "Diamond",
-    "MASTER": "Master",
-    "GRANDMASTER": "Grandmaster",
-    "CHALLENGER": "Challenger"
-  }
+const TIERS = {
+"IRON": "Iron",
+"BRONZE": "Bronze",
+"SILVER": "Silver",
+"GOLD": "Gold",
+"PLATINUM": "Platinum",
+"DIAMOND": "Diamond",
+"MASTER": "Master",
+"GRANDMASTER": "Grandmaster",
+"CHALLENGER": "Challenger"
+}
   
-  const LobbyType = ({queueType, tier, rank, leaguePoints, wins, losses}) => (
-    <div>
-      <p>
-        {queueType} <br />
-        {tier} {rank} {leaguePoints }LP<br />
-        Wins: {wins} Losses: {losses} <br /> 
-      </p>
-    </div>
-  );
+const LobbyType = ({queueType, tier, rank, leaguePoints, wins, losses}) => (
+<div>
+    <p>
+    {queueType} <br />
+    {tier} {rank} {leaguePoints }LP<br />
+    Wins: {wins} Losses: {losses} <br /> 
+    </p>
+</div>
+);
 
 export class SummonerProfile extends React.Component {
     constructor(props) {
@@ -83,23 +83,23 @@ export class SummonerProfile extends React.Component {
       return (
           this.state.summonerFound
           &&
-            <div className='summonerProfile cursor-pointer' onClick={this.showHiddenDiv}>
-              Tracking <b>{this.state.summonerByNameData.name} </b> <br />
-              <img src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + this.state.summonerByNameData.profileIconId + '.png'}></img> <br />
-              {this.state.summonerByNameData.summonerLevel} <br />
-              {this.state.leagueEntriesBySummonerData.map((data) => (
-              <LobbyType
-                queueType={QUEUE_TYPES[data.queueType]}
-                tier={TIERS[data.tier]}
-                rank={data.rank}
-                leaguePoints={data.leaguePoints}
-                wins={data.wins}
-                losses={data.losses}
-                key={data.leagueId}
-                />
-                ))
-              }
-            </div>
+        <div className='summonerProfile cursor-pointer' onClick={this.showHiddenDiv}>
+            Tracking <b>{this.state.summonerByNameData.name} </b> <br />
+            <img src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + this.state.summonerByNameData.profileIconId + '.png'}></img> <br />
+            {this.state.summonerByNameData.summonerLevel} <br />
+            {this.state.leagueEntriesBySummonerData.map((data) => (
+            <LobbyType
+            queueType={QUEUE_TYPES[data.queueType]}
+            tier={TIERS[data.tier]}
+            rank={data.rank}
+            leaguePoints={data.leaguePoints}
+            wins={data.wins}
+            losses={data.losses}
+            key={data.leagueId}
+            />
+            ))
+            }
+        </div>
       );
     }
   }
