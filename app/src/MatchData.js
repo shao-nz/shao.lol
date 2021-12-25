@@ -2,13 +2,20 @@
 
 import React, { Component } from 'react';
 import "./styles/MatchData.css";
+
+const TEAMS = {
+    'blue': 100,
+    'red': 200,
+    100: 'blue',
+    200: 'red'
+  }
   
 export class MatchData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       start: 0,
-      count: 5,
+      count: 10,
       matchList: [],
       matchDetails: [],
       loaded: false
@@ -51,7 +58,7 @@ export class MatchData extends React.Component {
     }))
   }
 
-  render (){
+  render() {
     return ((
       this.state.loaded
       &&
@@ -71,7 +78,8 @@ export class MatchData extends React.Component {
 const DisplayMatchData = ({matchData, puuid}) => (
   <div className='individualGame'>
     <DisplaySummonerNames
-      summonerNames={matchData.info.participants}
+      summonerList={matchData.info.participants}
+      key={matchData.metadata.matchId}
     />
     <DisplayKDA
       kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
@@ -81,23 +89,78 @@ const DisplayMatchData = ({matchData, puuid}) => (
   </div>
 )
 
-const DisplaySummonerNames = ({summonerNames}) => (
-  <div className='summonerNames'>
-    <ul>
-    {summonerNames.map((summoner) => {
-      return(
-        <li key={summoner.summonerName}>
-          {summoner.summonerName}
-        </li>
-      );
-    })}
-    </ul>
-  </div>
-)
+class DisplaySummonerNames extends React.Component {
+
+  getSummonerNamesByTeam = (summonerList) => {
+    var summonersByTeamDict = {};
+    for (const summonerDict of summonerList) {
+      if (summonerDict.teamId == TEAMS.blue) {
+        summonersByTeamDict['blue'] = summonersByTeamDict['blue'] || [];
+        summonersByTeamDict['blue'].push(summonerDict);
+      } else if (summonerDict.teamId == TEAMS.red){
+        summonersByTeamDict['red'] = summonersByTeamDict['red'] || [];
+        summonersByTeamDict['red'].push(summonerDict);
+      }
+    }
+    return summonersByTeamDict;
+  }
+
+  render() {
+    const summonersByTeamDict = this.getSummonerNamesByTeam(this.props.summonerList);
+    return (
+      <div className='summonerNames'>
+        <DisplayBlueTeam
+          blueTeamList={summonersByTeamDict.blue}
+        />
+        <DisplayRedTeam
+          redTeamList={summonersByTeamDict.red}
+        />
+      </div>
+    )
+  }
+}
+
 
 const DisplayKDA = ({kills, deaths, assists}) => (
   <div className='KDA'>
     {kills}/{deaths}/{assists} <br />
     {((kills + assists)/deaths).toFixed(2)} KDA
+  </div>
+)
+
+const DisplayBlueTeam = (blueTeamList) => (
+  <div className='blueTeamList'>
+    <ul>
+      {
+        blueTeamList.blueTeamList.map((summoner) => {
+          return (
+            <div className='summoner'>
+              <li key={summoner.summonerName}>
+              <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + summoner.championId + '.png'}/> {summoner.summonerName}
+              </li>
+            </div>
+
+          )
+        })
+      }
+    </ul>
+  </div>
+)
+
+const DisplayRedTeam = (redTeamList) => (
+  <div className='redTeamList'>
+    <ul>
+      {
+        redTeamList.redTeamList.map((summoner) => {
+          return (
+            <div className='summoner'>
+              <li key={summoner.summonerName}>
+              <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + summoner.championId + '.png'}/> {summoner.summonerName}
+              </li>
+            </div>
+          )
+        })
+      }
+    </ul>
   </div>
 )
