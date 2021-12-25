@@ -63,6 +63,7 @@ export class MatchData extends React.Component {
       this.state.loaded
       &&
       this.state.matchDetails.map((match) => {
+
           return (
           <DisplayMatchData
               matchData={match}
@@ -75,19 +76,26 @@ export class MatchData extends React.Component {
   }
 }
 
-const DisplayMatchData = ({matchData, puuid}) => (
-  <div className='individualGame'>
-    <DisplaySummonerNames
-      summonerList={matchData.info.participants}
-      key={matchData.metadata.matchId}
-    />
+const DisplayMatchData = ({matchData, puuid}) => {
+  var win = matchData.info.participants.find(participants => participants.puuid == puuid).win;
+  var background = '';
+  win ? background = 'green' : background = 'red'
+  return (
+    <div className='individualGame' style={{ backgroundColor: background}}>
     <DisplayKDA
       kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
       deaths={matchData.info.participants.find(participants => participants.puuid == puuid).deaths}
       assists={matchData.info.participants.find(participants => participants.puuid == puuid).assists}
     />
+    <DisplaySummonerNames
+      summonerList={matchData.info.participants}
+      key={matchData.metadata.matchId}
+    />
   </div>
-)
+  )
+}
+
+
 
 class DisplaySummonerNames extends React.Component {
 
