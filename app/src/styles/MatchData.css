@@ -50,9 +50,19 @@
 
 .runes {
     grid-area: 1/2;
+    align-self: center;
 }
 
-.runes img {
+img.keystone  {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(29, 0, 56);
+    border-radius: 50%;
+}
+
+img.secondaryRune {
+    width: 40px;
+    height: 40px;
     background-color: rgba(29, 0, 56);
     border-radius: 50%;
 }

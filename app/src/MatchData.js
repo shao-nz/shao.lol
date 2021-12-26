@@ -2,7 +2,8 @@
 
 import React, { Component } from 'react';
 import "./styles/MatchData.css";
-import perks from './data/perks.json'; 
+import perks from './data/perks.json';
+import perkStyles from './data/perkstyles.json';
 
 const cDragonBasePath = 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/';
 
@@ -129,6 +130,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
         champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
         championName={matchData.info.participants.find(participants => participants.puuid == puuid).championName}
         perkId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[0].selections[0].perk}
+        styleId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[1].style}
       />
     </div>
     <DisplayMatchInfo
@@ -190,7 +192,19 @@ const getPerkIconPath = (perkId) => {
   return perkPath;
 }
 
-const DisplayChamp = ({championId, champLevel, championName, perkId}) => (
+const getPerkStyleIconPath = (styleId) => {
+  var stylePath = '';
+  perkStyles.map((style) => {
+    if (style.id == styleId) {
+      stylePath = cDragonBasePath + 
+      style.iconPath.replace('/lol-game-data/assets/','').toLowerCase()
+    }
+  })
+
+  return stylePath;
+}
+
+const DisplayChamp = ({championId, champLevel, championName, perkId, styleId}) => (
   <>
     <div className='champ'>
       <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + championId + '.png'}/> <br />
@@ -202,7 +216,8 @@ const DisplayChamp = ({championId, champLevel, championName, perkId}) => (
 
       </div>
       <div className='runes'> 
-        <img src={getPerkIconPath(perkId)}/>
+        <img className='keystone' src={getPerkIconPath(perkId)}/>
+        <img className='secondaryRune' src={getPerkStyleIconPath(styleId)}/>
       </div>
     </div>
   </>
