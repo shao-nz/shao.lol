@@ -38,7 +38,7 @@
     height: 75px;
 }
 
-.spellsKeystones {
+.spellsRunes {
     grid-area: 1/2;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -48,8 +48,13 @@
     grid-area: 1/1;
 }
 
-.keystone {
+.runes {
     grid-area: 1/2;
+}
+
+.runes img {
+    background-color: rgba(29, 0, 56);
+    border-radius: 50%;
 }
 
 .summonerStats {
