@@ -119,9 +119,6 @@ const DisplayMatchData = ({matchData, puuid}) => {
   }
   return (
     <div className='individualGame' style={{ backgroundColor: background}}>
-    {/* {matchData.info.gameCreation} <br />
-    {matchData.info.gameStartTimestamp} <br />
-    {matchData.info.gameId} */}
     <div className='champGrid'>
       <DisplayChamp
         championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
@@ -141,15 +138,6 @@ const DisplayMatchData = ({matchData, puuid}) => {
       cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled}
       gameDuration={matchData.info.gameDuration}
     />
-    {/* <DisplayKDA
-      kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
-      deaths={matchData.info.participants.find(participants => participants.puuid == puuid).deaths}
-      assists={matchData.info.participants.find(participants => participants.puuid == puuid).assists}
-    />
-    <DisplayCSStats
-      cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled}
-      gameDuration={matchData.info.gameDuration}
-    /> */}
     <DisplaySummonerNames
       summonerList={matchData.info.participants}
       key={matchData.metadata.matchId}
