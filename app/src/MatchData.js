@@ -5,6 +5,7 @@ import "./styles/MatchData.css";
 import perks from './data/perks.json';
 import perkStyles from './data/perkstyles.json';
 import summonerSpells from './data/summoner-spells.json';
+import items from './data/items.json';
 
 const cDragonBasePath = 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/';
 
@@ -148,6 +149,15 @@ const DisplayMatchData = ({matchData, puuid}) => {
       cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled}
       gameDuration={matchData.info.gameDuration}
     />
+    <DisplayItems
+      item0={matchData.info.participants.find(participants => participants.puuid == puuid).item0}
+      item1={matchData.info.participants.find(participants => participants.puuid == puuid).item1}
+      item2={matchData.info.participants.find(participants => participants.puuid == puuid).item2}
+      item3={matchData.info.participants.find(participants => participants.puuid == puuid).item3}
+      item4={matchData.info.participants.find(participants => participants.puuid == puuid).item4}
+      item5={matchData.info.participants.find(participants => participants.puuid == puuid).item5}
+      item6={matchData.info.participants.find(participants => participants.puuid == puuid).item6}
+    />
     <DisplaySummonerNames
       summonerList={matchData.info.participants}
       key={matchData.metadata.matchId}
@@ -188,7 +198,7 @@ const getPerkIconPath = (perkId) => {
   perks.map((perk) => {
     if (perk.id == perkId) {
       perkPath = cDragonBasePath + 
-      perk.iconPath.replace('/lol-game-data/assets/','').toLowerCase()
+      perk.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
     }
   })
 
@@ -200,7 +210,7 @@ const getPerkStyleIconPath = (styleId) => {
   perkStyles.map((style) => {
     if (style.id == styleId) {
       stylePath = cDragonBasePath + 
-      style.iconPath.replace('/lol-game-data/assets/','').toLowerCase()
+      style.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
     }
   })
 
@@ -212,11 +222,27 @@ const getSummonerSpellIconPath = (summonerId) => {
   summonerSpells.map((summoner) => {
     if (summoner.id == summonerId) {
       summonerPath = cDragonBasePath + 
-      summoner.iconPath.replace('/lol-game-data/assets/','').toLowerCase()
+      summoner.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
     }
   })
 
   return summonerPath;
+}
+
+const getItemIconPath = (itemId) => {
+  var itemPath = '';
+  items.map((item) => {
+    if (item.id == itemId) {
+      itemPath = cDragonBasePath + 
+      item.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
+      console.log(itemPath)
+    } 
+    if (itemPath == '') {
+      itemPath = 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/gp_ui_placeholder.png';
+    }
+  })
+
+  return itemPath;
 }
 
 const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, summoner1Id, summoner2Id}) => (
@@ -250,6 +276,18 @@ const DisplaySummonerStats = ({kills, deaths, assists, cs, gameDuration}) => (
       {kills}/{deaths}/{assists} <br />
       {((kills + assists)/deaths).toFixed(2)} KDA
     </div>
+  </div>
+)
+
+const DisplayItems = ({item0, item1, item2, item3, item4, item5, item6}) => (
+  <div className='items'>
+    <img className='item0' src={getItemIconPath(item0)}/>
+    <img className='item1' src={getItemIconPath(item1)}/>
+    <img className='item2' src={getItemIconPath(item2)}/>
+    <img className='item3' src={getItemIconPath(item3)}/>
+    <img className='item4' src={getItemIconPath(item4)}/>
+    <img className='item5' src={getItemIconPath(item5)}/>
+    <img className='item6' src={getItemIconPath(item6)}/>
   </div>
 )
 
