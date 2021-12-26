@@ -19,6 +19,7 @@
 .matchInfo {
     grid-area: 1/1;
     align-self: end;
+    padding-bottom: 20px;
 }
 
 .champGrid {
