@@ -147,6 +147,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
 }
 
 class DisplayMatchInfo extends React.Component {
+  
   secondsToMMSS = (seconds) => {
     var timeString = '';
     var MM = Math.floor(seconds/60);
@@ -159,7 +160,7 @@ class DisplayMatchInfo extends React.Component {
   render() {
     return (
       <div className='matchInfo'>
-        {this.props.gameStatus} in:
+        <b>{this.props.gameStatus}</b> in:
         <div className='gameDuration'>
           {this.secondsToMMSS(this.props.gameDuration)}
         </div>
