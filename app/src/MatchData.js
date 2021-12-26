@@ -4,18 +4,37 @@ import React, { Component } from 'react';
 import "./styles/MatchData.css";
 
 const TEAMS = {
-    'blue': 100,
-    'red': 200,
-    100: 'blue',
-    200: 'red'
-  }
+  'blue': 100,
+  'red': 200,
+  100: 'blue',
+  200: 'red'
+}
+
+const QUEUE_TYPES = {
+  400: 'Normals',
+  420: 'Ranked Solo',
+  430: 'Ranked Flex',
+  450: 'ARAM',
+  700: 'Clash',
+  830: 'Intro Bots',
+  840: 'Beginner Bots',
+  850: 'Intermediate Bots',
+  900: 'URF',
+  910: 'Ascension',
+  920: 'Legend of the Poro King',
+  940: 'Nexus Siege',
+  1010: 'Snow ARURF',
+  1020: 'One for All',
+  1300: 'Nexus Blitz',
+  1400: 'Ultimate Spellbook'
+}
 
 export class MatchData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       start: 0,
-      count: 10,
+      count: 1,
       matchList: [],
       matchDetails: [],
       loaded: false
@@ -83,26 +102,46 @@ export class MatchData extends React.Component {
 
 const DisplayMatchData = ({matchData, puuid}) => {
   var background = '';
-
+  var gameStatus = '';
   var win = matchData.info.participants.find(participants => participants.puuid == puuid).win;
   var teamEarlySurrendered = matchData.info.participants.find(participants => participants.puuid == puuid).teamEarlySurrendered;
-  win ? background = 'green' : background = 'red'
+  if (win) {
+    background = 'green'; 
+    gameStatus = 'WIN';
+  } else {
+    background = 'red';
+    gameStatus = 'LOSS'
+  }
+
   if (teamEarlySurrendered) {
     background = 'grey';
+    gameStatus = 'REMAKE';
   }
   return (
     <div className='individualGame' style={{ backgroundColor: background}}>
     {/* {matchData.info.gameCreation} <br />
     {matchData.info.gameStartTimestamp} <br />
     {matchData.info.gameId} */}
-    <DisplayChamp
-      championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
-      champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
-    />
-    <DisplayGameDuration
+    <div className='champGrid'>
+      <DisplayChamp
+        championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
+        champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
+        championName={matchData.info.participants.find(participants => participants.puuid == puuid).championName}
+      />
+    </div>
+    <DisplayMatchInfo
+      gameStatus={gameStatus}
+      queueType={matchData.info.queueId}
       gameDuration={matchData.info.gameDuration}
     />
-    <DisplayKDA
+    <DisplaySummonerStats
+      kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
+      deaths={matchData.info.participants.find(participants => participants.puuid == puuid).deaths}
+      assists={matchData.info.participants.find(participants => participants.puuid == puuid).assists}
+      cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled}
+      gameDuration={matchData.info.gameDuration}
+    />
+    {/* <DisplayKDA
       kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
       deaths={matchData.info.participants.find(participants => participants.puuid == puuid).deaths}
       assists={matchData.info.participants.find(participants => participants.puuid == puuid).assists}
@@ -110,7 +149,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
     <DisplayCSStats
       cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled}
       gameDuration={matchData.info.gameDuration}
-    />
+    /> */}
     <DisplaySummonerNames
       summonerList={matchData.info.participants}
       key={matchData.metadata.matchId}
@@ -119,7 +158,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
   )
 }
 
-class DisplayGameDuration extends React.Component {
+class DisplayMatchInfo extends React.Component {
   secondsToMMSS = (seconds) => {
     var timeString = '';
     var MM = Math.floor(seconds/60);
@@ -131,32 +170,50 @@ class DisplayGameDuration extends React.Component {
 
   render() {
     return (
-      <div className='gameDuration'>
-        {this.secondsToMMSS(this.props.gameDuration)}
+      <div className='matchInfo'>
+        {this.props.gameStatus} in:
+        <div className='gameDuration'>
+          {this.secondsToMMSS(this.props.gameDuration)}
+        </div>
+        <div className='queueType'>
+          {QUEUE_TYPES[this.props.queueType]}
+        </div>
       </div>
+
     )
   }
 }
 
-const DisplayChamp = ({championId, champLevel}) => (
-  <div className='champ'>
-    <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + championId + '.png'}/> <br />
-    Level {champLevel}
-  </div>
+const DisplayChamp = ({championId, champLevel, championName}) => (
+  <>
+    <div className='champ'>
+      <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + championId + '.png'}/> <br />
+      Level {champLevel} <br />
+      {championName}
+    </div>
+    <div className='spellsKeystones'>
+      <div className='summonerSpells'>
+
+      </div>
+      <div className='keystone'>
+
+      </div>
+    </div>
+  </>
+
 )
 
-const DisplayCSStats = ({cs, gameDuration}) => (
-  <div className='CSStats'>
+
+const DisplaySummonerStats = ({kills, deaths, assists, cs, gameDuration}) => (
+  <div className='summonerStats'>
+    <div className='CSStats'>
     {cs} CS <br />
     <b>({(cs/(gameDuration/60)).toFixed(1)})</b> CS/m
-  </div>
-)
-
-
-const DisplayKDA = ({kills, deaths, assists}) => (
-  <div className='KDA'>
-    {kills}/{deaths}/{assists} <br />
-    {((kills + assists)/deaths).toFixed(2)} KDA
+    </div>
+    <div className='KDA'>
+      {kills}/{deaths}/{assists} <br />
+      {((kills + assists)/deaths).toFixed(2)} KDA
+    </div>
   </div>
 )
 

@@ -16,9 +16,20 @@
     /* grid-template-rows: 0.5fr; */
 }
 
+.matchInfo {
+    grid-area: 1/1;
+    align-self: end;
+}
+
+.champGrid {
+    grid-area: 1/2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 .champ {
     grid-area: 1/1;
-    /* align-self: end; */
+    align-self: center;
 }
 
 .champ img {
@@ -26,18 +37,23 @@
     height: 75px;
 }
 
-.gameDuration {
+.spellsKeystones {
+    grid-area: 1/2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.summonerSpells {
     grid-area: 1/1;
-    align-self: end;
 }
 
-.KDA {
+.keystone {
     grid-area: 1/2;
+}
+
+.summonerStats {
+    grid-area: 1/3;
     align-self: center;
-}
-
-.CSStats {
-    grid-area: 1/2;
 }
 
 .summonerNames {
