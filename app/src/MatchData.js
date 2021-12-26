@@ -2,6 +2,9 @@
 
 import React, { Component } from 'react';
 import "./styles/MatchData.css";
+import perks from './data/perks.json'; 
+
+const cDragonBasePath = 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/';
 
 const TEAMS = {
   'blue': 100,
@@ -34,7 +37,7 @@ export class MatchData extends React.Component {
     super(props);
     this.state = {
       start: 0,
-      count: 1,
+      count: 5,
       matchList: [],
       matchDetails: [],
       loaded: false
@@ -120,10 +123,12 @@ const DisplayMatchData = ({matchData, puuid}) => {
   return (
     <div className='individualGame' style={{ backgroundColor: background}}>
     <div className='champGrid'>
+      {console.log(matchData)}
       <DisplayChamp
         championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
         champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
         championName={matchData.info.participants.find(participants => participants.puuid == puuid).championName}
+        perkId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[0].selections[0].perk}
       />
     </div>
     <DisplayMatchInfo
@@ -147,7 +152,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
 }
 
 class DisplayMatchInfo extends React.Component {
-  
+
   secondsToMMSS = (seconds) => {
     var timeString = '';
     var MM = Math.floor(seconds/60);
@@ -173,23 +178,34 @@ class DisplayMatchInfo extends React.Component {
   }
 }
 
-const DisplayChamp = ({championId, champLevel, championName}) => (
+const getPerkIconPath = (perkId) => {
+  var perkPath = '';
+  perks.map((perk) => {
+    if (perk.id == perkId) {
+      perkPath = cDragonBasePath + 
+      perk.iconPath.replace('/lol-game-data/assets/','').toLowerCase()
+    }
+  })
+
+  return perkPath;
+}
+
+const DisplayChamp = ({championId, champLevel, championName, perkId}) => (
   <>
     <div className='champ'>
       <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + championId + '.png'}/> <br />
       Level {champLevel} <br />
       {championName}
     </div>
-    <div className='spellsKeystones'>
+    <div className='spellsRunes'>
       <div className='summonerSpells'>
 
       </div>
-      <div className='keystone'>
-
+      <div className='runes'> 
+        <img src={getPerkIconPath(perkId)}/>
       </div>
     </div>
   </>
-
 )
 
 
