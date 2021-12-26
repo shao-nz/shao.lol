@@ -133,6 +133,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
         perkId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[0].selections[0].perk}
         styleId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[1].style}
         summoner1Id={matchData.info.participants.find(participants => participants.puuid == puuid).summoner1Id}
+        summoner2Id={matchData.info.participants.find(participants => participants.puuid == puuid).summoner2Id}
       />
     </div>
     <DisplayMatchInfo
@@ -218,7 +219,7 @@ const getSummonerSpellIconPath = (summonerId) => {
   return summonerPath;
 }
 
-const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, summoner1Id}) => (
+const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, summoner1Id, summoner2Id}) => (
   <>
     <div className='champ'>
       <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + championId + '.png'}/> <br />
@@ -228,6 +229,7 @@ const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, su
     <div className='spellsRunes'>
       <div className='summonerSpells'>
         <img className='summoner1' src={getSummonerSpellIconPath(summoner1Id)}/>
+        <img className='summoner2' src={getSummonerSpellIconPath(summoner2Id)}/>
       </div>
       <div className='runes'> 
         <img className='keystone' src={getPerkIconPath(perkId)}/>
