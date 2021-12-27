@@ -127,7 +127,6 @@ const DisplayMatchData = ({matchData, puuid}) => {
   return (
     <div className='individualGame' style={{ backgroundColor: background}}>
     <div className='champGrid'>
-      {console.log(matchData)}
       <DisplayChamp
         championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
         champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
@@ -228,7 +227,13 @@ const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, su
     <div className='champ'>
       <img className='champPortrait' src={getIconPath('champion', championId)}/> <br />
       Level {champLevel} <br />
-      {championName}
+      {
+        championsummary.map((champion) => {
+          if (champion.id == championId) {
+            return(champion.name)
+          }
+        })
+      }
     </div>
     <div className='spellsRunes'>
       <div className='summonerSpells'>
