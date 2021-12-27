@@ -2,10 +2,11 @@
 
 import React, { Component } from 'react';
 import "./styles/MatchData.css";
+import championsummary from './data/champion-summary.json';
+import items from './data/items.json';
 import perks from './data/perks.json';
 import perkStyles from './data/perkstyles.json';
 import summonerSpells from './data/summoner-spells.json';
-import items from './data/items.json';
 
 const cDragonBasePath = 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/';
 
@@ -198,13 +199,20 @@ const getIconPath = (type, id) => {
     'perk': perks,
     'style': perkStyles,
     'summoner': summonerSpells,
-    'item': items
+    'item': items,
+    'champion': championsummary
   }
   var path = '';
   dataMapping[type].map((item) => {
     if (item.id == id) {
-      path = cDragonBasePath + 
-      item.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
+      if (type == 'champion') {
+        path = cDragonBasePath + 
+          item.squarePortraitPath.replace('/lol-game-data/assets/','').toLowerCase();
+      } else {
+        path = cDragonBasePath + 
+          item.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
+      }
+
     }
   })
 
@@ -215,62 +223,10 @@ const getIconPath = (type, id) => {
   return path;
 }
 
-const getPerkIconPath = (perkId) => {
-  var perkPath = '';
-  perks.map((perk) => {
-    if (perk.id == perkId) {
-      perkPath = cDragonBasePath + 
-      perk.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
-    }
-  })
-
-  return perkPath;
-}
-
-const getPerkStyleIconPath = (styleId) => {
-  var stylePath = '';
-  perkStyles.map((style) => {
-    if (style.id == styleId) {
-      stylePath = cDragonBasePath + 
-      style.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
-    }
-  })
-
-  return stylePath;
-}
-
-const getSummonerSpellIconPath = (summonerId) => {
-  var summonerPath = '';
-  summonerSpells.map((summoner) => {
-    if (summoner.id == summonerId) {
-      summonerPath = cDragonBasePath + 
-      summoner.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
-    }
-  })
-
-  return summonerPath;
-}
-
-const getItemIconPath = (itemId) => {
-  var itemPath = '';
-  items.map((item) => {
-    if (item.id == itemId) {
-      itemPath = cDragonBasePath + 
-      item.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
-      console.log(itemPath)
-    } 
-    if (itemPath == '') {
-      itemPath = 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/gp_ui_placeholder.png';
-    }
-  })
-
-  return itemPath;
-}
-
 const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, summoner1Id, summoner2Id}) => (
   <>
     <div className='champ'>
-      <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + championId + '.png'}/> <br />
+      <img className='champPortrait' src={getIconPath('champion', championId)}/> <br />
       Level {champLevel} <br />
       {championName}
     </div>
@@ -291,8 +247,8 @@ const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, su
 const DisplaySummonerStats = ({kills, deaths, assists, cs, gameDuration}) => (
   <div className='summonerStats'>
     <div className='CSStats'>
-    {cs} CS <br />
-    <b>({(cs/(gameDuration/60)).toFixed(1)})</b> CS/m
+      {cs} CS <br />
+      <b>({(cs/(gameDuration/60)).toFixed(1)})</b> CS/m
     </div>
     <div className='KDA'>
       {kills}/{deaths}/{assists} <br />
@@ -351,7 +307,7 @@ const DisplayBlueTeam = (blueTeamList) => (
           return (
             <div className='summoner' key={summoner.summonerName}>
               <li>
-              <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + summoner.championId + '.png'}/> {summoner.summonerName}
+                <img className='champIcon' src={getIconPath('champion', summoner.championId )}/> {summoner.summonerName}
               </li>
             </div>
 
@@ -370,7 +326,7 @@ const DisplayRedTeam = (redTeamList) => (
           return (
             <div className='summoner' key={summoner.summonerName}>
               <li>
-              <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/' + summoner.championId + '.png'}/> {summoner.summonerName}
+                <img className='champIcon' src={getIconPath('champion', summoner.championId )}/> {summoner.summonerName}
               </li>
             </div>
           )
