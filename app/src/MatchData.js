@@ -193,6 +193,28 @@ class DisplayMatchInfo extends React.Component {
   }
 }
 
+const getIconPath = (type, id) => {
+  const dataMapping = {
+    'perk': perks,
+    'style': perkStyles,
+    'summoner': summonerSpells,
+    'item': items
+  }
+  var path = '';
+  dataMapping[type].map((item) => {
+    if (item.id == id) {
+      path = cDragonBasePath + 
+      item.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
+    }
+  })
+
+  if (path == '' && type == 'item') {
+    path = 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/gp_ui_placeholder.png';
+  }
+
+  return path;
+}
+
 const getPerkIconPath = (perkId) => {
   var perkPath = '';
   perks.map((perk) => {
@@ -254,12 +276,12 @@ const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, su
     </div>
     <div className='spellsRunes'>
       <div className='summonerSpells'>
-        <img className='summoner1' src={getSummonerSpellIconPath(summoner1Id)}/>
-        <img className='summoner2' src={getSummonerSpellIconPath(summoner2Id)}/>
+        <img className='summoner1' src={getIconPath('summoner', summoner1Id)}/>
+        <img className='summoner2' src={getIconPath('summoner', summoner2Id)}/>
       </div>
       <div className='runes'> 
-        <img className='keystone' src={getPerkIconPath(perkId)}/>
-        <img className='secondaryRune' src={getPerkStyleIconPath(styleId)}/>
+        <img className='keystone' src={getIconPath('perk', perkId)}/>
+        <img className='secondaryRune' src={getIconPath('style', styleId)}/>
       </div>
     </div>
   </>
@@ -281,13 +303,13 @@ const DisplaySummonerStats = ({kills, deaths, assists, cs, gameDuration}) => (
 
 const DisplayItems = ({item0, item1, item2, item3, item4, item5, item6}) => (
   <div className='items'>
-    <img className='item0' src={getItemIconPath(item0)}/>
-    <img className='item1' src={getItemIconPath(item1)}/>
-    <img className='item2' src={getItemIconPath(item2)}/>
-    <img className='item3' src={getItemIconPath(item3)}/>
-    <img className='item4' src={getItemIconPath(item4)}/>
-    <img className='item5' src={getItemIconPath(item5)}/>
-    <img className='item6' src={getItemIconPath(item6)}/>
+    <img className='item0' src={getIconPath('item', item0)}/>
+    <img className='item1' src={getIconPath('item', item1)}/>
+    <img className='item2' src={getIconPath('item', item2)}/>
+    <img className='item3' src={getIconPath('item', item3)}/>
+    <img className='item4' src={getIconPath('item', item4)}/>
+    <img className='item5' src={getIconPath('item', item5)}/>
+    <img className='item6' src={getIconPath('item', item6)}/>
   </div>
 )
 
