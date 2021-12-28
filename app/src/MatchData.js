@@ -62,13 +62,6 @@ export class MatchData extends React.Component {
 
   }
 
-  epochConverter = (time) => {
-    var utcSeconds = time;
-    var d = new Date(0);
-    d.setUTCSeconds(utcSeconds);
-    return d.toLocaleDateString;
-  }
-
   async getMatchList() {
     var request = 'https://shao.lol/api/riot/matchGetMatchList/' + this.props.puuid + '/'+ this.state.start + '/' + this.state.count
     let response = await fetch(request);
@@ -124,47 +117,60 @@ const DisplayMatchData = ({matchData, puuid}) => {
   }
   return (
     <div className='individualGame' style={{ background: background}}>
-    <div className='champGrid'>
-      <DisplayChamp
-        championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
-        champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
-        championName={matchData.info.participants.find(participants => participants.puuid == puuid).championName}
-        perkId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[0].selections[0].perk}
-        styleId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[1].style}
-        summoner1Id={matchData.info.participants.find(participants => participants.puuid == puuid).summoner1Id}
-        summoner2Id={matchData.info.participants.find(participants => participants.puuid == puuid).summoner2Id}
+      <DisplayMatchInfo
+        gameStatus={gameStatus}
+        queueType={matchData.info.queueId}
+        gameDuration={matchData.info.gameDuration}
+        gameCreation={matchData.info.gameCreation}
+      />
+      <div className='champGrid'>
+        <DisplayChamp
+          championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
+          champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
+          championName={matchData.info.participants.find(participants => participants.puuid == puuid).championName}
+          perkId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[0].selections[0].perk}
+          styleId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[1].style}
+          summoner1Id={matchData.info.participants.find(participants => participants.puuid == puuid).summoner1Id}
+          summoner2Id={matchData.info.participants.find(participants => participants.puuid == puuid).summoner2Id}
+        />
+      </div>
+      <DisplaySummonerStats
+        kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
+        deaths={matchData.info.participants.find(participants => participants.puuid == puuid).deaths}
+        assists={matchData.info.participants.find(participants => participants.puuid == puuid).assists}
+        cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled}
+        gameDuration={matchData.info.gameDuration}
+      />
+      <DisplayItems
+        item0={matchData.info.participants.find(participants => participants.puuid == puuid).item0}
+        item1={matchData.info.participants.find(participants => participants.puuid == puuid).item1}
+        item2={matchData.info.participants.find(participants => participants.puuid == puuid).item2}
+        item3={matchData.info.participants.find(participants => participants.puuid == puuid).item3}
+        item4={matchData.info.participants.find(participants => participants.puuid == puuid).item4}
+        item5={matchData.info.participants.find(participants => participants.puuid == puuid).item5}
+        item6={matchData.info.participants.find(participants => participants.puuid == puuid).item6}
+      />
+      <DisplaySummonerNames
+        summonerList={matchData.info.participants}
+        key={matchData.metadata.matchId}
       />
     </div>
-    <DisplayMatchInfo
-      gameStatus={gameStatus}
-      queueType={matchData.info.queueId}
-      gameDuration={matchData.info.gameDuration}
-    />
-    <DisplaySummonerStats
-      kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
-      deaths={matchData.info.participants.find(participants => participants.puuid == puuid).deaths}
-      assists={matchData.info.participants.find(participants => participants.puuid == puuid).assists}
-      cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled}
-      gameDuration={matchData.info.gameDuration}
-    />
-    <DisplayItems
-      item0={matchData.info.participants.find(participants => participants.puuid == puuid).item0}
-      item1={matchData.info.participants.find(participants => participants.puuid == puuid).item1}
-      item2={matchData.info.participants.find(participants => participants.puuid == puuid).item2}
-      item3={matchData.info.participants.find(participants => participants.puuid == puuid).item3}
-      item4={matchData.info.participants.find(participants => participants.puuid == puuid).item4}
-      item5={matchData.info.participants.find(participants => participants.puuid == puuid).item5}
-      item6={matchData.info.participants.find(participants => participants.puuid == puuid).item6}
-    />
-    <DisplaySummonerNames
-      summonerList={matchData.info.participants}
-      key={matchData.metadata.matchId}
-    />
-  </div>
   )
 }
 
 class DisplayMatchInfo extends React.Component {
+
+  epochConverterDate = (dateTime) => {
+    var myDate = new Date(dateTime);
+    const strDate = myDate.toLocaleDateString();
+    return strDate;
+  }
+
+  epochConverterTime = (dateTime) => {
+    var myDate = new Date(dateTime);
+    const strDate = myDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    return strDate;
+  }
 
   secondsToMMSS = (seconds) => {
     var timeString = '';
@@ -178,7 +184,14 @@ class DisplayMatchInfo extends React.Component {
   render() {
     return (
       <div className='matchInfo'>
-        <b>{this.props.gameStatus}</b> in:
+        <div className='gameCreation'>
+          {this.epochConverterDate(this.props.gameCreation)} <br/>
+          {this.epochConverterTime(this.props.gameCreation)}
+        </div>
+        <br />
+        <div className='gameStatus'>
+          <b>{this.props.gameStatus}</b> in:
+        </div>
         <div className='gameDuration'>
           {this.secondsToMMSS(this.props.gameDuration)}
         </div>

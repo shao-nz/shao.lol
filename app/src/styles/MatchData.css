@@ -11,7 +11,7 @@
     border-radius: 10px;
     display: grid;
     grid-template-columns: 1fr 1fr 0.75fr 1fr 1.75fr;
-    gap: 8px;
+    gap: 15px;
 }
 
 .matchInfo {
@@ -131,7 +131,7 @@ img.trinket {
 }
 
 .summonerNames {
-    padding: 0 10px 10px 30px;
+    padding: 0 10px 10px 15px;
     grid-area: 1/5;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -161,11 +161,11 @@ img.trinket {
 .blueTeamList {
     display: flex;
     flex-direction: row;
-    width: 125px;
+    width: 130px;
 }
 
 .redTeamList {
     display: flex;
     flex-direction: row;
-    width: 125px;
+    width: 130px;
 }
