@@ -53,22 +53,20 @@ export class MatchData extends React.Component {
     await Promise.all(
       this.state.matchList.map(async (matchId) => await this.getMatchDetails(matchId))
     );
+    this.state.matchDetails.sort((a, b) => {
+      return b.info.gameCreation - a.info.gameCreation
+    })
     this.setState({
       loaded: true
     })
-    // console.log(this.state.matchDetails)
-    // var thing = this.state.matchDetails.sort(function(a, b) {
-    //   // console.log(b.info.gameCreation - a.info.gameCreation)
-    //   return a.info.gameCreation - b.info.gameCreation;
-    // })
-    // console.log(thing)
+
   }
 
   epochConverter = (time) => {
     var utcSeconds = time;
     var d = new Date(0);
     d.setUTCSeconds(utcSeconds);
-    return d;
+    return d.toLocaleDateString;
   }
 
   async getMatchList() {
