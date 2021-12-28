@@ -195,6 +195,7 @@ class DisplayMatchInfo extends React.Component {
         <div className='gameDuration'>
           {this.secondsToMMSS(this.props.gameDuration)}
         </div>
+        <br />
         <div className='queueType'>
           {QUEUE_TYPES[this.props.queueType]}
         </div>
