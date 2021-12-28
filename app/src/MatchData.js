@@ -41,7 +41,7 @@ export class MatchData extends React.Component {
     super(props);
     this.state = {
       start: 0,
-      count: 5,
+      count: 10,
       matchList: [],
       matchDetails: [],
       loaded: false
@@ -111,10 +111,10 @@ const DisplayMatchData = ({matchData, puuid}) => {
   var win = matchData.info.participants.find(participants => participants.puuid == puuid).win;
   var teamEarlySurrendered = matchData.info.participants.find(participants => participants.puuid == puuid).teamEarlySurrendered;
   if (win) {
-    background = 'green'; 
+    background = 'linear-gradient( rgba(15, 255, 191, 0.65), rgba(18, 18, 18))'; 
     gameStatus = 'WIN';
   } else {
-    background = 'red';
+    background = 'linear-gradient( rgba(255, 48, 48, 0.65), rgba(18, 18, 18))';
     gameStatus = 'LOSS'
   }
 
@@ -123,7 +123,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
     gameStatus = 'REMAKE';
   }
   return (
-    <div className='individualGame' style={{ backgroundColor: background}}>
+    <div className='individualGame' style={{ background: background}}>
     <div className='champGrid'>
       <DisplayChamp
         championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
@@ -239,8 +239,8 @@ const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, su
         <img className='summoner2' src={getIconPath('summoner', summoner2Id)}/>
       </div>
       <div className='runes'> 
-        <img className='keystone' src={getIconPath('perk', perkId)}/>
-        <img className='secondaryRune' src={getIconPath('style', styleId)}/>
+        <img src={getIconPath('perk', perkId)}/>
+        <img src={getIconPath('style', styleId)}/>
       </div>
     </div>
   </>
@@ -261,15 +261,18 @@ const DisplaySummonerStats = ({kills, deaths, assists, cs, gameDuration}) => (
 )
 
 const DisplayItems = ({item0, item1, item2, item3, item4, item5, item6}) => (
-  <div className='items'>
-    <img className='item0' src={getIconPath('item', item0)}/>
-    <img className='item1' src={getIconPath('item', item1)}/>
-    <img className='item2' src={getIconPath('item', item2)}/>
-    <img className='item3' src={getIconPath('item', item3)}/>
-    <img className='item4' src={getIconPath('item', item4)}/>
-    <img className='item5' src={getIconPath('item', item5)}/>
-    <img className='item6' src={getIconPath('item', item6)}/>
+  <div className='all-items'>
+    <div className='items'>
+      <img className='item1' src={getIconPath('item', item0)}/>
+      <img className='item2' src={getIconPath('item', item1)}/>
+      <img className='item3' src={getIconPath('item', item2)}/>
+      <img className='item4' src={getIconPath('item', item3)}/>
+      <img className='item5' src={getIconPath('item', item4)}/>
+      <img className='item6' src={getIconPath('item', item5)}/>
+    </div>
+    <img className='trinket' src={getIconPath('item', item6)}/>
   </div>
+
 )
 
 class DisplaySummonerNames extends React.Component {
@@ -303,7 +306,7 @@ class DisplaySummonerNames extends React.Component {
 }
 
 const DisplayBlueTeam = (blueTeamList) => (
-  <div className='blueTeamList'>
+  <div className='blueTeamList truncate'>
     <ul>
       {
         blueTeamList.blueTeamList.map((summoner) => {
@@ -322,7 +325,7 @@ const DisplayBlueTeam = (blueTeamList) => (
 )
 
 const DisplayRedTeam = (redTeamList) => (
-  <div className='redTeamList'>
+  <div className='redTeamList truncate'>
     <ul>
       {
         redTeamList.redTeamList.map((summoner) => {
