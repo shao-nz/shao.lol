@@ -263,13 +263,14 @@ const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, su
 
 const DisplaySummonerStats = ({kills, deaths, assists, cs, gameDuration}) => (
   <div className='summonerStats'>
-    <div className='CSStats'>
-      {cs} CS <br />
-      <b>({(cs/(gameDuration/60)).toFixed(1)})</b> CS/m
-    </div>
     <div className='KDA'>
       {kills}/{deaths}/{assists} <br />
       {((kills + assists)/deaths).toFixed(2)} KDA
+    </div>
+    <br />
+    <div className='CSStats'>
+      {cs} CS <br />
+      <b>({(cs/(gameDuration/60)).toFixed(1)})</b> CS/m
     </div>
   </div>
 )

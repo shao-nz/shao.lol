@@ -44,7 +44,7 @@
     grid-area: 1/2;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3px;
+    gap: 4px;
 }
 
 .summonerSpells {
@@ -108,14 +108,17 @@ img.item3 {
 
 img.item4 {
     grid-area: 2/1;
+    padding-top: 1px;
 }
 
 img.item5 {
     grid-area: 2/2;
+    padding-top: 1px;
 }
 
 img.item6 {
     grid-area: 2/3;
+    padding-top: 1px;
 }
 
 img.trinket {
