@@ -138,7 +138,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
         kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
         deaths={matchData.info.participants.find(participants => participants.puuid == puuid).deaths}
         assists={matchData.info.participants.find(participants => participants.puuid == puuid).assists}
-        cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled}
+        cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled + matchData.info.participants.find(participants => participants.puuid == puuid).neutralMinionsKilled}
         gameDuration={matchData.info.gameDuration}
       />
       <DisplayItems
