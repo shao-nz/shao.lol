@@ -1,81 +1,81 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
-#[cfg(test)] mod tests;
+use rocket::get;
+use rocket::http::Status;
+use rocket::request::Request;
+use rocket::response::{self, Responder};
+use rocket::serde::json::Json;
+use serde::Serialize;
 
-#[derive(FromFormField)]
-enum Lang {
-    #[field(value = "en")]
-    English,
-    #[field(value = "ru")]
-    #[field(value = "ру")]
-    Russian
-}
+const RIOT_API_DEV: &str = env!("RIOT_API_DEV", "Please set RIOT_API_DEV");
+// const RIOT_API_PROD: &str = env!("RIOT_API_PROD", "Please set RIOT_API_PROD");
 
-#[derive(FromForm)]
-struct Options<'r> {
-    emoji: bool,
-    name: Option<&'r str>,
-}
+pub struct JsonErr<T: Serialize>(pub T, pub Status);
 
-// Try visiting:
-//   http://127.0.0.1:8000/hello/world
-#[get("/world")]
-fn world() -> &'static str {
-    "Hello, world!"
-}
-
-// Try visiting:
-//   http://127.0.0.1:8000/hello/мир
-#[get("/мир")]
-fn mir() -> &'static str {
-    "Привет, мир!"
-}
-
-// Try visiting:
-//   http://127.0.0.1:8000/wave/Rocketeer/100
-#[get("/<name>/<age>")]
-fn wave(name: &str, age: u8) -> String {
-    format!("👋 Hello, {} year old named {}!", age, name)
-}
-
-// Note: without the `..` in `opt..`, we'd need to pass `opt.emoji`, `opt.name`.
-//
-// Try visiting:
-//   http://127.0.0.1:8000/?emoji
-//   http://127.0.0.1:8000/?name=Rocketeer
-//   http://127.0.0.1:8000/?lang=ру
-//   http://127.0.0.1:8000/?lang=ру&emoji
-//   http://127.0.0.1:8000/?emoji&lang=en
-//   http://127.0.0.1:8000/?name=Rocketeer&lang=en
-//   http://127.0.0.1:8000/?emoji&name=Rocketeer
-//   http://127.0.0.1:8000/?name=Rocketeer&lang=en&emoji
-//   http://127.0.0.1:8000/?lang=ru&emoji&name=Rocketeer
-#[get("/?<lang>&<opt..>")]
-fn hello(lang: Option<Lang>, opt: Options<'_>) -> String {
-    let mut greeting = String::new();
-    if opt.emoji {
-        greeting.push_str("👋 ");
+impl<'r, T: Serialize> Responder<'r, 'r> for JsonErr<T> {
+    fn respond_to(self, r: &Request) -> response::Result<'r> {
+        let json_self = Json(self.0);
+        json_self.respond_to(r).map(|mut r| {
+            r.set_status(self.1);
+            r
+        })
     }
+}
 
-    match lang {
-        Some(Lang::Russian) => greeting.push_str("Привет"),
-        Some(Lang::English) => greeting.push_str("Hello"),
-        None => greeting.push_str("Hi"),
-    }
+#[derive(Serialize)]
+pub enum ResultErr {
+    NotFound,
+}
 
-    if let Some(name) = opt.name {
-        greeting.push_str(", ");
-        greeting.push_str(name);
-    }
+#[get("/summoner/<summoner_name>")]
+async fn summoner(summoner_name: String) -> Result<Json<String>, JsonErr<ResultErr>> {
+    let url = format!("https://oc1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{summoner_name}?api_key={RIOT_API_DEV}");
 
-    greeting.push('!');
-    greeting
+    get(&url).await
+}
+
+#[get("/lolBySummoner/<summoner_id>")]
+async fn lol_by_summoner(summoner_id: String) -> Result<Json<String>, JsonErr<ResultErr>> {
+    let url = format!("https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/{summoner_id}?api_key={RIOT_API_DEV}");
+
+    get(&url).await
+}
+
+#[get("/matchList/<puuid>/<start>/<count>")]
+async fn match_list(
+    puuid: String,
+    start: String,
+    count: String,
+) -> Result<Json<String>, JsonErr<ResultErr>> {
+    let url = format!("https://sea.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start={start}&count={count}&api_key={RIOT_API_DEV}");
+
+    get(&url).await
+}
+
+#[get("/matchDetails/<match_id>")]
+async fn match_details(match_id: String) -> Result<Json<String>, JsonErr<ResultErr>> {
+    let url = format!(
+        "https://sea.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={RIOT_API_DEV}"
+    );
+
+    get(&url).await
 }
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
-        .mount("/", routes![hello])
-        .mount("/hello", routes![world, mir])
-        .mount("/wave", routes![wave])
+    rocket::build().mount(
+        "/api/riot",
+        routes![summoner, lol_by_summoner, match_list, match_details],
+    )
+}
+
+async fn get(url: &str) -> Result<Json<String>, JsonErr<ResultErr>> {
+    match reqwest::get(url).await {
+        Ok(res) => match res.text().await {
+            Ok(res) => Ok(Json(res)),
+            Err(_) => Err(JsonErr(ResultErr::NotFound, Status::NotFound)),
+        },
+        Err(_) => Err(JsonErr(ResultErr::NotFound, Status::NotFound)),
+    }
 }
