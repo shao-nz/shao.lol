@@ -85,7 +85,7 @@ export class SummonerProfile extends React.Component {
           &&
         <div className='summonerProfile cursor-pointer' onClick={this.showHiddenDiv}>
             Tracking <b>{this.state.summonerByNameData.name} </b> <br />
-            <img src={'https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/' + this.state.summonerByNameData.profileIconId + '.png'}></img> <br />
+            <img src={'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/' + this.state.summonerByNameData.profileIconId + '.jpg'}></img> <br />
             {this.state.summonerByNameData.summonerLevel} <br />
             {this.state.leagueEntriesBySummonerData.map((data) => (
             <LobbyType
