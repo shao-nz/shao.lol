@@ -41,7 +41,7 @@ export class MatchData extends React.Component {
     super(props);
     this.state = {
       start: 0,
-      count: 10,
+      count: 20,
       matchList: [],
       matchDetails: [],
       loaded: false
@@ -49,21 +49,39 @@ export class MatchData extends React.Component {
   }
 
   async componentDidMount() {
-    await this.getMatchList(this.props.uuid);
+    await this.getMatchList(this.props.puuid);
     await Promise.all(
       this.state.matchList.map(async (matchId) => await this.getMatchDetails(matchId))
     );
-    this.state.matchDetails.sort((a, b) => {
-      return b.info.gameCreation - a.info.gameCreation
+
+    let tempMatchDetails = this.filterMatches(this.state.matchDetails, this.props.puuid);
+
+    tempMatchDetails.sort((a, b) => {
+      return b.info.gameCreation - a.info.gameCreation;
     })
+
+    this.setState({
+      matchDetails: tempMatchDetails,
+    })
+
     this.setState({
       loaded: true
     })
-
   }
 
-  async getMatchList() {
-    let request = 'https://shao.lol/api/riot/matchGetMatchList/' + this.props.puuid + '/' + this.state.start + '/' + this.state.count
+  filterMatches(matchDetails, puuid) {
+    let filteredMatches = [];
+    for (const match of matchDetails) {
+      if (match.metadata.participants.includes(puuid)) {
+        filteredMatches.push(match)
+      }
+    }
+
+    return filteredMatches;
+  }
+
+  async getMatchList(puuid) {
+    let request = 'https://shao.lol/api/riot/matchGetMatchList/' + puuid + '/' + this.state.start + '/' + this.state.count
     let response = await fetch(request);
     let data = await response.json();
     this.setState({
@@ -94,7 +112,7 @@ export class MatchData extends React.Component {
             />
           );
         } else {
-          return(<></>)
+          return (<></>)
         }
       })
     ))
@@ -186,7 +204,7 @@ class DisplayMatchInfo extends React.Component {
 
   render() {
     return (
-      <div className='matchInfo'>
+      <div className='matchInfo' key={this.props.key}>
         <div className='gameCreation'>
           {this.epochConverterDate(this.props.gameCreation)} <br />
           {this.epochConverterTime(this.props.gameCreation)}
@@ -203,7 +221,6 @@ class DisplayMatchInfo extends React.Component {
           {QUEUE_TYPES[this.props.queueType]}
         </div>
       </div>
-
     )
   }
 }
@@ -281,14 +298,14 @@ const DisplaySummonerStats = ({ kills, deaths, assists, cs, gameDuration }) => (
 const DisplayItems = ({ item0, item1, item2, item3, item4, item5, item6 }) => (
   <div className='all-items'>
     <div className='items'>
-      <img className='item1' src={getIconPath('item', item0)} alt="item1"/>
-      <img className='item2' src={getIconPath('item', item1)} alt="item2"/>
-      <img className='item3' src={getIconPath('item', item2)} alt="item3"/>
-      <img className='item4' src={getIconPath('item', item3)} alt="item4"/>
-      <img className='item5' src={getIconPath('item', item4)} alt="item5"/>
-      <img className='item6' src={getIconPath('item', item5)} alt="item6"/>
+      <img className='item1' src={getIconPath('item', item0)} alt="item1" />
+      <img className='item2' src={getIconPath('item', item1)} alt="item2" />
+      <img className='item3' src={getIconPath('item', item2)} alt="item3" />
+      <img className='item4' src={getIconPath('item', item3)} alt="item4" />
+      <img className='item5' src={getIconPath('item', item4)} alt="item5" />
+      <img className='item6' src={getIconPath('item', item5)} alt="item6" />
     </div>
-    <img className='trinket' src={getIconPath('item', item6)} alt="trinket"/>
+    <img className='trinket' src={getIconPath('item', item6)} alt="trinket" />
   </div>
 
 )
@@ -328,11 +345,10 @@ const DisplayBlueTeam = (blueTeamList) => (
     <ul>
       {
         blueTeamList.blueTeamList.map((summoner) => {
-          console.log(summoner);
           return (
             <div className='summoner' key={summoner.summonerName}>
               <li>
-                <img className='champIcon' src={getIconPath('champion', summoner.championId)} alt={summoner.championName}/> {summoner.summonerName}
+                <img className='champIcon' src={getIconPath('champion', summoner.championId)} alt={summoner.championName} /> {summoner.summonerName}
               </li>
             </div>
 
@@ -351,7 +367,7 @@ const DisplayRedTeam = (redTeamList) => (
           return (
             <div className='summoner' key={summoner.summonerName}>
               <li>
-                <img className='champIcon' src={getIconPath('champion', summoner.championId)} alt={summoner.championName}/> {summoner.summonerName}
+                <img className='champIcon' src={getIconPath('champion', summoner.championId)} alt={summoner.championName} /> {summoner.summonerName}
               </li>
             </div>
           )
