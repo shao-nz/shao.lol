@@ -42,7 +42,6 @@ div {
 .searchBar button {
     margin: 0 auto;
     padding: 15px 15px;
-    background: url('../static/cursed_flushed.png');
     background-size: cover;
     border: 0px;
 }

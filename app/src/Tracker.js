@@ -1,69 +1,81 @@
 /* eslint-disable */
 
-import React, { Component } from 'react';
-import { SummonerProfile } from './SummonerProfile'
-import { MatchData } from './MatchData'
+import React from "react";
+import { SummonerProfile } from "./SummonerProfile";
+import { MatchData } from "./MatchData";
 import "./styles/Tracker.css";
-import logo from "./static/cursed_flushed.png";
 
 export class Tracker extends React.Component {
   constructor(props) {
     super(props);
+    const listSummonerNames = [
+      "Shao",
+      "Asvalbina",
+      "Harbinsink",
+    ];
+
+    let initialSummoners = {};
+    for (const summonerName of listSummonerNames) {
+      initialSummoners[summonerName] = {
+        summonerByNameData: {},
+        matchDataVisible: false,
+      }
+    }
+
     this.state = {
-      searchText: '',
-      summonerByNameData: {},
-      matchDataVisible: false
+      summoners: initialSummoners
     };
   }
 
-  handleCallback = (summonerData, matchData) => {
-    this.setState({
+  handleCallback = (summonerName, summonerData, matchData) => {
+    let summonersCopy = { ...this.state.summoners };
+    for (const [key, val] of Object.entries(summonersCopy)) {
+      if (summonerName !== key) {
+        val.matchDataVisible = false;
+      }
+    }
+
+    summonersCopy[summonerName] = {
       summonerByNameData: summonerData,
-      matchDataVisible: matchData
-    })
-  }
+      matchDataVisible: matchData,
+    }
+
+    this.setState({
+      summoners: summonersCopy
+    });
+  };
 
   render() {
     return (
-        <>
-        <img src={logo} alt='cursed flushed emoji'></img>
-        <div className='big-box'>
-          {/* <div className='searchBar'>
-              <button/>
-              <form onSubmit={this.onFormSubmit}>
-                  <input type='text' onChange={e => this.setState({searchText: e.target.value.toLowerCase().replace(/ /g, '')})}></input>
-                  <button type='submit' /> <br />
-              </form>
-          </div> */}
-          <div className='summoners'>
-            <SummonerProfile
-              summonerName='Shao'
-              passToParent = {this.handleCallback}
-            />
-            <SummonerProfile
-              summonerName="Harbinsink"
-              passToParent = {this.handleCallback}
-            />
-            <SummonerProfile
-              summonerName="Barny Fargo"
-              passToParent = {this.handleCallback}
-            />
-            <SummonerProfile
-              summonerName="Jozendas"
-              passToParent = {this.handleCallback}
-            />
-          </div>
-          {
-            this.state.matchDataVisible
-            &&
-            <div className='matchData'>
-            <MatchData
-                puuid={this.state.summonerByNameData.puuid}
+      <>
+        <div className="big-box">
+          <div className="summoners">
+            {
+              Object.keys(this.state.summoners).map((summoner) => {
+                return (
+                  <SummonerProfile
+                  summonerName={summoner}
+                  passToParent={this.handleCallback}
+                  key={summoner}
                 />
-            </div>
-          }
+                )
+              })
+            }
+          </div>
+          <div className="matchData">
+            {
+              
+              Object.values(this.state.summoners).map((summoner) => {
+                return (
+                  summoner.matchDataVisible
+                  &&
+                  <MatchData puuid={summoner.summonerByNameData.puuid} key={summoner.summonerByNameData.name}/>
+                )
+              })
+            }
+          </div>
         </div>
-        </>
-  );
+      </>
+    );
   }
 }

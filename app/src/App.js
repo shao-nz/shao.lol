@@ -2,7 +2,6 @@
 
 
 import React, { Component } from 'react';
-import logo from './static/cursed_flushed.png';
 import './styles/App.css';
 import { Tracker } from './Tracker'
 
