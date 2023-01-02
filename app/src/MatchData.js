@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { Component } from 'react';
+import React from 'react';
 import "./styles/MatchData.css";
 import championsummary from './data/champion-summary.json';
 import items from './data/items.json';
@@ -63,7 +63,7 @@ export class MatchData extends React.Component {
   }
 
   async getMatchList() {
-    var request = 'https://shao.lol/api/riot/matchGetMatchList/' + this.props.puuid + '/'+ this.state.start + '/' + this.state.count
+    let request = 'https://shao.lol/api/riot/matchGetMatchList/' + this.props.puuid + '/' + this.state.start + '/' + this.state.count
     let response = await fetch(request);
     let data = await response.json();
     this.setState({
@@ -72,10 +72,9 @@ export class MatchData extends React.Component {
   }
 
   async getMatchDetails(matchId) {
-    var request = 'https://shao.lol/api/riot/matchGetMatchDetails/' + matchId
+    let request = 'https://shao.lol/api/riot/matchGetMatchDetails/' + matchId
     let response = await fetch(request);
     let data = await response.json();
-    var matchId = data.metadata.matchId;
     this.setState(prevState => ({
       matchDetails: [...prevState.matchDetails, data]
     }))
@@ -86,25 +85,29 @@ export class MatchData extends React.Component {
       this.state.loaded
       &&
       this.state.matchDetails.map((match) => {
+        if (!match.info.gameMode.toLowerCase().includes("tutorial")) {
           return (
-          <DisplayMatchData
+            <DisplayMatchData
               matchData={match}
               puuid={this.props.puuid}
               key={match.metadata.matchId}
-          />
+            />
           );
+        } else {
+          return(<></>)
+        }
       })
     ))
   }
 }
 
-const DisplayMatchData = ({matchData, puuid}) => {
-  var background = '';
-  var gameStatus = '';
-  var win = matchData.info.participants.find(participants => participants.puuid == puuid).win;
-  var teamEarlySurrendered = matchData.info.participants.find(participants => participants.puuid == puuid).teamEarlySurrendered;
+const DisplayMatchData = ({ matchData, puuid }) => {
+  let background = '';
+  let gameStatus = '';
+  let win = matchData.info.participants.find(participants => participants.puuid === puuid).win;
+  let teamEarlySurrendered = matchData.info.participants.find(participants => participants.puuid === puuid).teamEarlySurrendered;
   if (win) {
-    background = 'linear-gradient( rgba(15, 255, 191, 0.65), rgba(18, 18, 18))'; 
+    background = 'linear-gradient( rgba(15, 255, 191, 0.65), rgba(18, 18, 18))';
     gameStatus = 'WIN';
   } else {
     background = 'linear-gradient( rgba(255, 48, 48, 0.65), rgba(18, 18, 18))';
@@ -116,7 +119,7 @@ const DisplayMatchData = ({matchData, puuid}) => {
     gameStatus = 'REMAKE';
   }
   return (
-    <div className='individualGame' style={{ background: background}}>
+    <div className='individualGame' style={{ background: background }}>
       <DisplayMatchInfo
         gameStatus={gameStatus}
         queueType={matchData.info.queueId}
@@ -125,30 +128,30 @@ const DisplayMatchData = ({matchData, puuid}) => {
       />
       <div className='champGrid'>
         <DisplayChamp
-          championId={matchData.info.participants.find(participants => participants.puuid == puuid).championId}
-          champLevel={matchData.info.participants.find(participants => participants.puuid == puuid).champLevel}
-          championName={matchData.info.participants.find(participants => participants.puuid == puuid).championName}
-          perkId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[0].selections[0].perk}
-          styleId={matchData.info.participants.find(participants => participants.puuid == puuid).perks.styles[1].style}
-          summoner1Id={matchData.info.participants.find(participants => participants.puuid == puuid).summoner1Id}
-          summoner2Id={matchData.info.participants.find(participants => participants.puuid == puuid).summoner2Id}
+          championId={matchData.info.participants.find(participants => participants.puuid === puuid).championId}
+          champLevel={matchData.info.participants.find(participants => participants.puuid === puuid).champLevel}
+          championName={matchData.info.participants.find(participants => participants.puuid === puuid).championName}
+          perkId={matchData.info.participants.find(participants => participants.puuid === puuid).perks.styles[0].selections[0].perk}
+          styleId={matchData.info.participants.find(participants => participants.puuid === puuid).perks.styles[1].style}
+          summoner1Id={matchData.info.participants.find(participants => participants.puuid === puuid).summoner1Id}
+          summoner2Id={matchData.info.participants.find(participants => participants.puuid === puuid).summoner2Id}
         />
       </div>
       <DisplaySummonerStats
-        kills={matchData.info.participants.find(participants => participants.puuid == puuid).kills}
-        deaths={matchData.info.participants.find(participants => participants.puuid == puuid).deaths}
-        assists={matchData.info.participants.find(participants => participants.puuid == puuid).assists}
-        cs={matchData.info.participants.find(participants => participants.puuid == puuid).totalMinionsKilled + matchData.info.participants.find(participants => participants.puuid == puuid).neutralMinionsKilled}
+        kills={matchData.info.participants.find(participants => participants.puuid === puuid).kills}
+        deaths={matchData.info.participants.find(participants => participants.puuid === puuid).deaths}
+        assists={matchData.info.participants.find(participants => participants.puuid === puuid).assists}
+        cs={matchData.info.participants.find(participants => participants.puuid === puuid).totalMinionsKilled + matchData.info.participants.find(participants => participants.puuid === puuid).neutralMinionsKilled}
         gameDuration={matchData.info.gameDuration}
       />
       <DisplayItems
-        item0={matchData.info.participants.find(participants => participants.puuid == puuid).item0}
-        item1={matchData.info.participants.find(participants => participants.puuid == puuid).item1}
-        item2={matchData.info.participants.find(participants => participants.puuid == puuid).item2}
-        item3={matchData.info.participants.find(participants => participants.puuid == puuid).item3}
-        item4={matchData.info.participants.find(participants => participants.puuid == puuid).item4}
-        item5={matchData.info.participants.find(participants => participants.puuid == puuid).item5}
-        item6={matchData.info.participants.find(participants => participants.puuid == puuid).item6}
+        item0={matchData.info.participants.find(participants => participants.puuid === puuid).item0}
+        item1={matchData.info.participants.find(participants => participants.puuid === puuid).item1}
+        item2={matchData.info.participants.find(participants => participants.puuid === puuid).item2}
+        item3={matchData.info.participants.find(participants => participants.puuid === puuid).item3}
+        item4={matchData.info.participants.find(participants => participants.puuid === puuid).item4}
+        item5={matchData.info.participants.find(participants => participants.puuid === puuid).item5}
+        item6={matchData.info.participants.find(participants => participants.puuid === puuid).item6}
       />
       <DisplaySummonerNames
         summonerList={matchData.info.participants}
@@ -168,13 +171,13 @@ class DisplayMatchInfo extends React.Component {
 
   epochConverterTime = (dateTime) => {
     var myDate = new Date(dateTime);
-    const strDate = myDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const strDate = myDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     return strDate;
   }
 
   secondsToMMSS = (seconds) => {
     var timeString = '';
-    var MM = Math.floor(seconds/60);
+    var MM = Math.floor(seconds / 60);
     var SS = seconds - (MM * 60);
     timeString = `${MM}:${SS.toString().padStart(2, "0")}`;
 
@@ -185,7 +188,7 @@ class DisplayMatchInfo extends React.Component {
     return (
       <div className='matchInfo'>
         <div className='gameCreation'>
-          {this.epochConverterDate(this.props.gameCreation)} <br/>
+          {this.epochConverterDate(this.props.gameCreation)} <br />
           {this.epochConverterTime(this.props.gameCreation)}
         </div>
         <br />
@@ -214,90 +217,90 @@ const getIconPath = (type, id) => {
     'champion': championsummary
   }
   var path = '';
-  dataMapping[type].map((item) => {
-    if (item.id == id) {
-      if (type == 'champion') {
-        path = cDragonBasePath + 
-          item.squarePortraitPath.replace('/lol-game-data/assets/','').toLowerCase();
+  dataMapping[type].forEach((item) => {
+    if (item.id === id) {
+      if (type === 'champion') {
+        path = cDragonBasePath +
+          item.squarePortraitPath.replace('/lol-game-data/assets/', '').toLowerCase();
       } else {
-        path = cDragonBasePath + 
-          item.iconPath.replace('/lol-game-data/assets/','').toLowerCase();
+        path = cDragonBasePath +
+          item.iconPath.replace('/lol-game-data/assets/', '').toLowerCase();
       }
 
     }
   })
 
-  if (path == '' && type == 'item') {
+  if (path === '' && type === 'item') {
     path = 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/gp_ui_placeholder.png';
   }
 
   return path;
 }
 
-const DisplayChamp = ({championId, champLevel, championName, perkId, styleId, summoner1Id, summoner2Id}) => (
+const DisplayChamp = ({ championId, champLevel, championName, perkId, styleId, summoner1Id, summoner2Id }) => (
   <>
     <div className='champ'>
-      <img className='champPortrait' src={getIconPath('champion', championId)}/> <br />
+      <img className='champPortrait' src={getIconPath('champion', championId)} alt={championName} /> <br />
       Level {champLevel} <br />
       {
-        championsummary.map((champion) => {
-          if (champion.id == championId) {
-            return(champion.name)
+        championsummary.forEach((champion) => {
+          if (champion.id === championId) {
+            <p>{champion.name}</p>
           }
         })
       }
     </div>
     <div className='spellsRunes'>
       <div className='summonerSpells'>
-        <img className='summoner1' src={getIconPath('summoner', summoner1Id)}/>
-        <img className='summoner2' src={getIconPath('summoner', summoner2Id)}/>
+        <img className='summoner1' src={getIconPath('summoner', summoner1Id)} alt="summoner spell 1" />
+        <img className='summoner2' src={getIconPath('summoner', summoner2Id)} alt="summoner spell 2" />
       </div>
-      <div className='runes'> 
-        <img src={getIconPath('perk', perkId)}/>
-        <img src={getIconPath('style', styleId)}/>
+      <div className='runes'>
+        <img src={getIconPath('perk', perkId)} alt="perk" />
+        <img src={getIconPath('style', styleId)} alt="style" />
       </div>
     </div>
   </>
 )
 
 
-const DisplaySummonerStats = ({kills, deaths, assists, cs, gameDuration}) => (
+const DisplaySummonerStats = ({ kills, deaths, assists, cs, gameDuration }) => (
   <div className='summonerStats'>
     <div className='KDA'>
       {kills}/{deaths}/{assists} <br />
-      {((kills + assists)/deaths).toFixed(2)} KDA
+      {((kills + assists) / deaths).toFixed(2)} KDA
     </div>
     <br />
     <div className='CSStats'>
       {cs} CS <br />
-      <b>({(cs/(gameDuration/60)).toFixed(1)})</b> CS/m
+      <b>({(cs / (gameDuration / 60)).toFixed(1)})</b> CS/m
     </div>
   </div>
 )
 
-const DisplayItems = ({item0, item1, item2, item3, item4, item5, item6}) => (
+const DisplayItems = ({ item0, item1, item2, item3, item4, item5, item6 }) => (
   <div className='all-items'>
     <div className='items'>
-      <img className='item1' src={getIconPath('item', item0)}/>
-      <img className='item2' src={getIconPath('item', item1)}/>
-      <img className='item3' src={getIconPath('item', item2)}/>
-      <img className='item4' src={getIconPath('item', item3)}/>
-      <img className='item5' src={getIconPath('item', item4)}/>
-      <img className='item6' src={getIconPath('item', item5)}/>
+      <img className='item1' src={getIconPath('item', item0)} alt="item1"/>
+      <img className='item2' src={getIconPath('item', item1)} alt="item2"/>
+      <img className='item3' src={getIconPath('item', item2)} alt="item3"/>
+      <img className='item4' src={getIconPath('item', item3)} alt="item4"/>
+      <img className='item5' src={getIconPath('item', item4)} alt="item5"/>
+      <img className='item6' src={getIconPath('item', item5)} alt="item6"/>
     </div>
-    <img className='trinket' src={getIconPath('item', item6)}/>
+    <img className='trinket' src={getIconPath('item', item6)} alt="trinket"/>
   </div>
 
 )
 
 class DisplaySummonerNames extends React.Component {
   getSummonerNamesByTeam = (summonerList) => {
-    var summonersByTeamDict = {};
+    let summonersByTeamDict = {};
     for (const summonerDict of summonerList) {
-      if (summonerDict.teamId == TEAMS.blue) {
+      if (summonerDict.teamId === TEAMS.blue) {
         summonersByTeamDict['blue'] = summonersByTeamDict['blue'] || [];
         summonersByTeamDict['blue'].push(summonerDict);
-      } else if (summonerDict.teamId == TEAMS.red){
+      } else if (summonerDict.teamId === TEAMS.red) {
         summonersByTeamDict['red'] = summonersByTeamDict['red'] || [];
         summonersByTeamDict['red'].push(summonerDict);
       }
@@ -325,10 +328,11 @@ const DisplayBlueTeam = (blueTeamList) => (
     <ul>
       {
         blueTeamList.blueTeamList.map((summoner) => {
+          console.log(summoner);
           return (
             <div className='summoner' key={summoner.summonerName}>
               <li>
-                <img className='champIcon' src={getIconPath('champion', summoner.championId )}/> {summoner.summonerName}
+                <img className='champIcon' src={getIconPath('champion', summoner.championId)} alt={summoner.championName}/> {summoner.summonerName}
               </li>
             </div>
 
@@ -347,7 +351,7 @@ const DisplayRedTeam = (redTeamList) => (
           return (
             <div className='summoner' key={summoner.summonerName}>
               <li>
-                <img className='champIcon' src={getIconPath('champion', summoner.championId )}/> {summoner.summonerName}
+                <img className='champIcon' src={getIconPath('champion', summoner.championId)} alt={summoner.championName}/> {summoner.summonerName}
               </li>
             </div>
           )

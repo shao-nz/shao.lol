@@ -1,14 +1,15 @@
 .App {
     text-align: center;
     margin: 0 auto;
-  }
-  
-  .App img {
-      margin: 0 auto;
-      width: 50px;
-      height: 50px;
-  }
-  
-  h1 {
-      margin: 10px 10px;
-  }
+}
+
+.App img {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+}
+
+h1 {
+    margin: 10px 10px;
+    padding-bottom: 2rem;
+}
